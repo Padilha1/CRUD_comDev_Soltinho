@@ -1,7 +1,23 @@
+/* eslint-disable no-console */
 /* eslint-disable react/react-in-jsx-scope */
+import { todoController } from "@ui/controller/todo";
 import { GlobalStyles } from "@ui/theme/GlobalStyles";
+import React from "react";
 
-export default function Page() {
+interface HomeTodo {
+    id: string;
+    content: string;
+}
+
+export default function HomePage() {
+    const [todos, setTodos] = React.useState<HomeTodo[]>([]);
+
+    React.useEffect(() => {
+        todoController.get().then((todos) => {
+            setTodos(todos);
+        });
+    }, []);
+
     return (
         <main>
             <GlobalStyles themeName="indigo" />
@@ -39,25 +55,24 @@ export default function Page() {
                     </thead>
 
                     <tbody>
-                        <tr>
-                            <td>
-                                <input type="checkbox" />
-                            </td>
-                            <td>d4f26</td>
-                            <td>
-                                Conteúdo de uma TODO Lorem ipsum dolor sit amet
-                                consectetur adipisicing elit. Eaque vero facilis
-                                obcaecati, autem aliquid eius! Consequatur eaque
-                                doloribus laudantium soluta optio odit,
-                                provident, ab voluptates doloremque voluptas
-                                recusandae aspernatur aperiam.
-                            </td>
-                            <td align="right">
-                                <button data-type="delete">Apagar</button>
-                            </td>
-                        </tr>
+                        {todos.map((currentTodo) => {
+                            return (
+                                <tr key={currentTodo.id}>
+                                    <td>
+                                        <input type="checkbox" />
+                                    </td>
+                                    <td>{currentTodo.id.substring(0, 4)}</td>
+                                    <td>{currentTodo.content}</td>
+                                    <td align="right">
+                                        <button data-type="delete">
+                                            Apagar
+                                        </button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
 
-                        <tr>
+                        {/* <tr>
                             <td
                                 colSpan={4}
                                 align="center"
@@ -65,13 +80,13 @@ export default function Page() {
                             >
                                 Carregando...
                             </td>
-                        </tr>
+                        </tr> */}
 
-                        <tr>
+                        {/* <tr>
                             <td colSpan={4} align="center">
                                 Nenhum item encontrado
                             </td>
-                        </tr>
+                        </tr> */}
 
                         <tr>
                             <td
