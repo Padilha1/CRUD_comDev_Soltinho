@@ -10,7 +10,8 @@ interface HomeTodo {
 }
 
 export default function HomePage() {
-    const [initialLoadComplete, setInitialLoadComplete] = React.useState(false);
+    const initialLoadComplete = React.useRef(false);
+    const [newTodoContent, setNewTodoContent] = React.useState("");
     const [totalPages, setTotalPages] = React.useState(0);
     const [page, setPage] = React.useState(1);
     const [todos, setTodos] = React.useState<HomeTodo[]>([]);
@@ -23,12 +24,8 @@ export default function HomePage() {
     const hasMorePages = totalPages > page;
     const hasNoTodos = homeTodos.length === 0 && !isLoading;
 
-    // const search = event.target.value;
-    // setTodos(filteredTodos);
-
     React.useEffect(() => {
-        setInitialLoadComplete(true);
-        if (!initialLoadComplete) {
+        if (!initialLoadComplete.current) {
             todoController
                 .get({ page })
                 .then(({ todos, pages }) => {
@@ -37,6 +34,7 @@ export default function HomePage() {
                 })
                 .finally(() => {
                     setIsLoading(false);
+                    initialLoadComplete.current = true;
                 });
         }
     }, []);
@@ -52,8 +50,33 @@ export default function HomePage() {
                 <div className="typewriter">
                     <h1>Qual Anime adicionar a lista?</h1>
                 </div>
-                <form>
-                    <input type="text" placeholder="Kimetsu no Yaiba..." />
+                <form
+                    onSubmit={(event) => {
+                        event.preventDefault();
+                        todoController.create({
+                            content: newTodoContent,
+                            onSuccess(todo: HomeTodo) {
+                                setTodos((oldTodos) => {
+                                    return [todo, ...oldTodos];
+                                });
+                                setNewTodoContent("");
+                            },
+                            onError() {
+                                alert(
+                                    "Voce precisa de um conteudo para criar!"
+                                );
+                            },
+                        });
+                    }}
+                >
+                    <input
+                        type="text"
+                        placeholder="Kimetsu no Yaiba..."
+                        value={newTodoContent}
+                        onChange={function newTodoHandler(event) {
+                            setNewTodoContent(event.target.value);
+                        }}
+                    />
                     <button type="submit" aria-label="Adicionar novo item">
                         +
                     </button>
