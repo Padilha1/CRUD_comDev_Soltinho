@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 /* eslint-disable react/react-in-jsx-scope */
 import { todoController } from "@ui/controller/todo";
@@ -7,6 +8,7 @@ import React from "react";
 interface HomeTodo {
     id: string;
     content: string;
+    done: boolean;
 }
 
 export default function HomePage() {
@@ -50,6 +52,7 @@ export default function HomePage() {
                 <div className="typewriter">
                     <h1>Qual Anime adicionar a lista?</h1>
                 </div>
+                {/* CREATE/ADICIONAR */}
                 <form
                     onSubmit={(event) => {
                         event.preventDefault();
@@ -107,14 +110,47 @@ export default function HomePage() {
                     </thead>
 
                     <tbody>
-                        {homeTodos.map((currentTodo) => {
+                        {homeTodos.map((todo) => {
                             return (
-                                <tr key={currentTodo.id}>
+                                <tr key={todo.id}>
                                     <td>
-                                        <input type="checkbox" />
+                                        <input
+                                            type="checkbox"
+                                            checked={todo.done}
+                                            onChange={function handleToggle() {
+                                                todoController.toggleDone({
+                                                    id: todo.id,
+                                                    updateTodoOnScreen() {
+                                                        setTodos(
+                                                            (currentTodos) => {
+                                                                return currentTodos.map(
+                                                                    (
+                                                                        currentTodo
+                                                                    ) => {
+                                                                        if (
+                                                                            currentTodo.id ===
+                                                                            todo.id
+                                                                        ) {
+                                                                            return {
+                                                                                ...currentTodo,
+                                                                                done: !currentTodo.done,
+                                                                            };
+                                                                        }
+                                                                        return currentTodo;
+                                                                    }
+                                                                );
+                                                            }
+                                                        );
+                                                    },
+                                                });
+                                            }}
+                                        />
                                     </td>
-                                    <td>{currentTodo.id.substring(0, 4)}</td>
-                                    <td>{currentTodo.content}</td>
+                                    <td>{todo.id.substring(0, 4)}</td>
+                                    <td>
+                                        {!todo.done && todo.content}
+                                        {todo.done && <s>{todo.content}</s>}
+                                    </td>
                                     <td align="right">
                                         <button data-type="delete">
                                             Apagar
