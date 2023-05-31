@@ -73,6 +73,7 @@ export default function HomePage() {
                     }}
                 >
                     <input
+                        name="add-todo"
                         type="text"
                         placeholder="Kimetsu no Yaiba..."
                         value={newTodoContent}

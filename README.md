@@ -8,6 +8,7 @@
 -   Typescript
 -   Node.js
 -   Testes CI/CD
+-   Cypress
 
 <br/>
 
