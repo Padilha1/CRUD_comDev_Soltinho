@@ -1,4 +1,4 @@
-name:" [CI] Continuous Integration"
+name: "[CI] Continuous Integration"
 
 on:
     pull_request:
@@ -7,6 +7,12 @@ on:
 jobs:
     lint:
         runs-on: ubuntu-latest
-        steps: 
+        steps:
+            - uses: actions/checkout@v3
+            ##===============
+            - name: "Debug"
+              run: "ls -la"
+            - name: "Install Dependencies"
+              run: "npm install"
             - name: "Lint"
-              run: "echo Aloalo w Brazil"
+              run: "npm run lint"
