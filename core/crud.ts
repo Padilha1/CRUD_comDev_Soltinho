@@ -81,20 +81,3 @@ export function deleteById(id: UUID) {
         JSON.stringify({ todos: todosWithoutOne }, null, 2)
     );
 }
-
-// function CLEAR_DB() {
-//     fs.writeFileSync(DB_FILE_PATH, "");
-// }
-
-//Simulation
-// CLEAR_DB();
-
-// create("Primeira Todo!");
-// const secondTodo = create("Segunda Todo!");
-// deleteById(secondTodo.id);
-// const thirdTodo = create("Terceira TODO!");
-// update(thirdTodo.id, { content: "Atualizada", done: true });
-
-// const todos = read();
-// console.log(todos);
-// console.log(todos.length);
