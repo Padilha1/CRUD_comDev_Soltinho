@@ -1,13 +1,14 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 import { todoController } from "@server/controller/todo";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default function handler(
+export default async function handler(
     request: NextApiRequest,
     response: NextApiResponse
 ) {
     if (request.method === "PUT") {
-        todoController.toggleDone(request, response);
+        await todoController.toggleDone(request, response);
         return;
     }
 

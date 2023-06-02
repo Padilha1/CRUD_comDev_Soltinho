@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { todoRepository } from "@ui/repository.ts/todo";
 import { Todo } from "@ui/schema/todo";
 

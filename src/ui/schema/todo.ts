@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { z as schema } from "zod";
 
 export const TodoSchema = schema.object({
