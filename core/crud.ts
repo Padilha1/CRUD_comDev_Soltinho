@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 import fs from "fs"; //ES6
 import { v4 as uuid } from "uuid";

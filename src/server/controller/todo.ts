@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { todoRepository } from "@server/repository/todo";
 import { z as schema } from "zod";
 import { NextApiRequest, NextApiResponse } from "next";

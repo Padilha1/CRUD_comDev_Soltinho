@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { HttpNotFoundError } from "@server/infra/errors";
 import { Todo, TodoSchema } from "@server/schema/todo";
 import { supabase } from "@server/infra/db/supabase";

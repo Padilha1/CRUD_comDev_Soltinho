@@ -1,27 +1,37 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
+
 import { Todo, TodoSchema } from "@ui/schema/todo";
+
 import { z as schema } from "zod";
+
 interface TodoRepositoryGetParams {
     page: number;
     limit: number;
 }
+
 interface TodoRepositoryGetOutput {
     todos: Todo[];
+
     pages: number;
 }
 
 function get({
     page,
+
     limit,
 }: TodoRepositoryGetParams): Promise<TodoRepositoryGetOutput> {
     return fetch(`/api/todos?page=${page}&limit=${limit}`).then(
         async (resServer) => {
             const todoString = await resServer.text();
+
             const responseParsed = parseTodosFromServer(JSON.parse(todoString));
 
             return {
                 total: responseParsed.total,
+
                 todos: responseParsed.todos,
+
                 pages: responseParsed.pages,
             };
         }
@@ -31,9 +41,11 @@ function get({
 export async function createByContent(content: string): Promise<Todo> {
     const response = await fetch("api/todos", {
         method: "POST",
+
         headers: {
             "Content-Type": "application/json",
         },
+
         body: JSON.stringify({
             content,
         }),
@@ -41,15 +53,20 @@ export async function createByContent(content: string): Promise<Todo> {
 
     if (response.ok) {
         const serverResponse = await response.json();
+
         const ServerResponseSchema = schema.object({
             todo: TodoSchema,
         });
+
         const serverResponseParsed =
             ServerResponseSchema.safeParse(serverResponse);
+
         if (!serverResponseParsed.success) {
             throw new Error("Failed to created TODO: (");
         }
+
         const todo = serverResponseParsed.data.todo;
+
         return todo;
     }
 
@@ -63,17 +80,23 @@ export async function toggleDone(todoId: string): Promise<Todo> {
 
     if (response.ok) {
         const serverResponse = await response.json();
+
         const ServerResponseSchema = schema.object({
             todo: TodoSchema,
         });
+
         const serverResponseParsed =
             ServerResponseSchema.safeParse(serverResponse);
+
         if (!serverResponseParsed.success) {
             throw new Error(`Failed to update Todo, id: ${todoId}`);
         }
+
         const updatedTodo = serverResponseParsed.data.todo;
+
         return updatedTodo;
     }
+
     throw new Error("Server Error");
 }
 
@@ -81,6 +104,7 @@ async function deleteById(id: string) {
     const response = await fetch(`/api/todos/${id}`, {
         method: "DELETE",
     });
+
     if (!response.ok) {
         throw new Error("Failed to delete");
     }
@@ -88,22 +112,33 @@ async function deleteById(id: string) {
 
 export const todoRepository = {
     get,
+
     createByContent,
+
     toggleDone,
+
     deleteById,
 };
 
 //schema / model
+
 // interface Todo {
+
 //     id: string;
+
 //     content: string;
+
 //     date: Date;
+
 //     done: boolean;
+
 // }
 
 function parseTodosFromServer(responseBody: unknown): {
     total: number;
+
     pages: number;
+
     todos: Array<Todo>;
 } {
     if (
@@ -116,7 +151,9 @@ function parseTodosFromServer(responseBody: unknown): {
     ) {
         return {
             total: Number(responseBody.total),
+
             pages: Number(responseBody.pages),
+
             todos: responseBody.todos.map((todo: unknown) => {
                 if (todo === null && typeof todo !== "object") {
                     throw new Error("invalid todo from API");
@@ -124,23 +161,32 @@ function parseTodosFromServer(responseBody: unknown): {
 
                 const { id, content, done, date } = todo as {
                     id: string;
+
                     content: string;
+
                     date: string;
+
                     done: string;
                 };
 
                 return {
                     id,
+
                     content,
+
                     done: String(done).toLowerCase() === "true",
+
                     date: date,
                 };
             }),
         };
     }
+
     return {
         pages: 1,
+
         total: 0,
+
         todos: [],
     };
 }

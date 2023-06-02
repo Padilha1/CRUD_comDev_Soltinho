@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { todoController } from "@server/controller/todo";
 import { NextApiRequest, NextApiResponse } from "next";
 
